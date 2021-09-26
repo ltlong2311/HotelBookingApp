@@ -5,44 +5,82 @@ import {
   StyleSheet,
   View,
   Text,
+  FlatList,
   ScrollView,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import COLORS from "../../consts/colors";
 import { StatusBar } from "expo-status-bar";
+import hotelsByLocation from "../../consts/hotelsByLocation";
+import HotelByLocationCard from "../../components/Hotel/HotelByLocationCard";
 
 const LocationDetailsScreen = ({ navigation, route }) => {
   const location = route.params;
+
+  const getHeader = () => {
+    return (
+      <>
+        <ImageBackground style={{ height: 180 }} source={{ uri: location.url }}>
+          <View style={styles.overlay}>
+            <View style={styles.header}>
+              <MaterialIcons
+                name="arrow-back-ios"
+                size={28}
+                color={COLORS.white}
+                onPress={navigation.goBack}
+              />
+              <MaterialIcons name="more-vert" size={28} color={COLORS.white} />
+            </View>
+            <View style={styles.imageDetails}>
+              <Text
+                style={[
+                  styles.textShadow,
+                  {
+                    width: "70%",
+                    fontSize: 23,
+                    fontWeight: "bold",
+                    color: COLORS.white,
+                  },
+                ]}
+              >
+                {location.name}
+              </Text>
+            </View>
+          </View>
+        </ImageBackground>
+        <View style={{}}>
+          <Text
+            style={{
+              width: "70%",
+              padding: 20,
+              fontSize: 16,
+              fontWeight: "bold",
+              color: COLORS.dark,
+            }}
+          >
+            {hotelsByLocation.length} lựa chọn
+          </Text>
+        </View>
+      </>
+    );
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
       <StatusBar style="light" />
-      <ImageBackground style={{ flex: 1 }} source={{ uri: location.url }}>
-        <View style={styles.overlay}>
-          <View style={styles.header}>
-            <MaterialIcons
-              name="arrow-back-ios"
-              size={28}
-              color={COLORS.white}
-              onPress={navigation.goBack}
+          <View style={styles.locationList}>
+            <FlatList
+              contentContainerStyle={{}}
+              showsVerticalScrollIndicator={false}
+              ListHeaderComponent={getHeader}
+              maxToRenderPerBatch={2}
+              data={hotelsByLocation}
+              keyExtractor={() => Math.random().toString(36).substr(2, 9)}
+              renderItem={({ item }) => (
+                <HotelByLocationCard hotel={item} navigation={navigation} />
+              )}
             />
-            <MaterialIcons name="more-vert" size={28} color={COLORS.white} />
           </View>
-          <View style={styles.imageDetails}>
-            <Text
-              style={{
-                width: "70%",
-                fontSize: 23,
-                fontWeight: "bold",
-                color: COLORS.white,
-              }}
-            >
-              {location.name}
-            </Text>
-          </View>
-        </View>
-      </ImageBackground>
-      <View style={styles.locationList}>
-       </View>
     </SafeAreaView>
   );
 };
@@ -84,28 +122,31 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   locationList: {
-    flex: 2.5,
-    top: -30,
-    paddingTop: 20,
-    paddingHorizontal: 20,
+    flex: 3,
+
     backgroundColor: COLORS.white,
   },
   detailsContent: {
     marginBottom: -25,
   },
   header: {
-    marginTop: 45,
+    marginTop: 40,
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 15,
   },
   imageDetails: {
     position: "absolute",
-    bottom: 20,
-    padding: 23,
+    bottom: -10,
+    padding: 20,
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
+  },
+  textShadow: {
+    textShadowColor: "rgba(0, 0, 0, 0.5)",
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10,
   },
 });
 export default LocationDetailsScreen;

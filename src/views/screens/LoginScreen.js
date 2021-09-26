@@ -16,7 +16,6 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import * as Animatable from "react-native-animatable";
 // import LinearGradient from "react-native-linear-gradient";
 import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../../consts/colors";
@@ -44,7 +43,7 @@ const LoginScreen = ({ navigation }) => {
             // height: Dimensions.get("window").height / 1.9,
             marginBottom: -30,
           }}
-          source={require("../../assets/hotel23.jpg")}
+          source={require("../../assets/bg3.jpg")}
         >
           <View style={styles.headerIcon}>
             <MaterialIcons
@@ -71,7 +70,7 @@ const LoginScreen = ({ navigation }) => {
             <TextInput
               placeholder="Mật khẩu"
               secureTextEntry={data.secureTextEntry ? true : false}
-              style={styles.textInput}
+              style={styles.textInput}  
               autoCapitalize="none"
             />
             <TouchableOpacity onPress={updateSecureTextEntry}>

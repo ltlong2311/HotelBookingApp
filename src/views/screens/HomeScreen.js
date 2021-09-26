@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   View,
@@ -11,21 +11,31 @@ import {
   ImageBackground,
   FlatList,
   Dimensions,
+  Animated,
   TouchableOpacity,
+  ImageStore,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import COLORS from "../../consts/colors";
-import hotels from "../../consts/hotels";
 import hotelHighlights from "../../consts/hotelHighlights";
 import { DrawerActions } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import hotelAPI from "../../API/hotelAPI";
+import Card from "../../components/Hotel/Card";
+import RecommendCard from "../../components/Hotel/RecommendedCard";
 
 const { width } = Dimensions.get("screen");
 
 const HomeScreen = ({ navigation }) => {
   const [dataHotel, setDataHotel] = useState([]);
+  const [dataList, setDataList] = useState(hotelHighlights);
+  const scrollX = new Animated.Value(0);
+  let position = Animated.divide(scrollX, width - 40);
+  const ref = useRef(null);
+
   useEffect(() => {
+    setDataList(hotelHighlights);
+    infiniteScroll(dataList);
     const getData = async () => {
       try {
         const res = await hotelAPI.getAll();
@@ -37,113 +47,20 @@ const HomeScreen = ({ navigation }) => {
     getData();
   }, []);
 
-  const Card = ({ hotel }) => {
-    return (
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onPress={() => navigation.navigate("DetailsScreen", hotel)}
-      >
-        <ImageBackground
-          style={styles.cardImage}
-          source={{ uri: hotel.tenMien }}
-        >
-          <View style={styles.overlay}>
-            <Text
-              style={{
-                color: COLORS.white,
-                fontSize: 20,
-                fontWeight: "bold",
-                marginTop: 10,
-              }}
-            >
-              {hotel.tenKS}
-            </Text>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "space-between",
-                flexDirection: "row",
-                alignItems: "flex-end",
-              }}
-            >
-              <View style={{ flexDirection: "row" }}>
-                <MaterialIcons name="place" size={20} color={COLORS.white} />
-                <Text style={{ marginLeft: 5, color: COLORS.white }}>
-                  {hotel.diaDiem.tenDD}
-                </Text>
-              </View>
-              <View style={{ flexDirection: "row" }}>
-                <MaterialIcons name="star" size={20} color={COLORS.white} />
-                <Text style={{ marginLeft: 5, color: COLORS.white }}>
-                  {hotel.rating}
-                </Text>
-              </View>
-            </View>
-          </View>
-        </ImageBackground>
-      </TouchableOpacity>
-    );
-  };
+  const infiniteScroll = (dataList) => {
+    const numberOfData = dataList.length;
+    let scrollValue = 0,
+      scrolled = 0;
 
-  const RecommendedCard = ({ hotel }) => {
-    return (
-      <ImageBackground style={styles.rmCardImage} source={hotel.image}>
-        <View style={styles.imageOverlay}>
-          <Text
-            style={[
-              styles.textShadow,
-              {
-                color: COLORS.white,
-                fontSize: 22,
-                fontWeight: "bold",
-                marginTop: 10,
-              },
-            ]}
-          >
-            {hotel.name}
-          </Text>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "space-between",
-              alignItems: "flex-end",
-            }}
-          >
-            <View
-              style={{ width: "100%", flexDirection: "row", marginTop: 10 }}
-            >
-              <View style={{ flexDirection: "row" }}>
-                <MaterialIcons name="place" size={22} color={COLORS.white} />
-                <Text
-                  style={[
-                    styles.textShadow,
-                    { color: COLORS.white, marginLeft: 5 },
-                  ]}
-                  size={22}
-                >
-                  {hotel.location}
-                </Text>
-              </View>
-              <View style={{ flexDirection: "row" }}>
-                <MaterialIcons style={styles.textShadow} name="star" size={22} color={COLORS.white} />
-                <Text
-                  style={[
-                    styles.textShadow,
-                    { color: COLORS.white, marginLeft: 5 },
-                  ]}
-                  size={22}
-                >
-                  5.0
-                </Text>
-              </View>
-            </View>
-            <Text style={{ color: COLORS.white, fontSize: 33 }}>
-              {hotel.detail}
-            </Text>
-          </View>
-        </View>
-      </ImageBackground>
-    );
+    setInterval(() => {
+      scrolled++;
+      if (scrolled < numberOfData) scrollValue = scrollValue + width - 20;
+      else {
+        scrollValue = 0;
+        scrolled = 0;
+      }
+      ref?.current?.scrollToOffset({ offset: scrollValue, animated: true });
+    }, 8000);
   };
 
   return (
@@ -153,11 +70,7 @@ const HomeScreen = ({ navigation }) => {
         backgroundColor: COLORS.white,
       }}
     >
-      {/* <StatusBar style="light" /> */}
-      {/* <StatusBar
-        translucent={false}
-        backgroundColor={COLORS.sanMarino}
-      /> */}
+      <StatusBar style="light" />
       <LinearGradient
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
@@ -179,13 +92,15 @@ const HomeScreen = ({ navigation }) => {
           color={COLORS.white}
         ></MaterialIcons>
       </LinearGradient>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
         <LinearGradient
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
           colors={["#41DA", "#22a7f0"]}
           style={{
-            // backgroundColor: COLORS.sanMarino,
             height: 100,
             paddingHorizontal: 20,
             marginBottom: 40,
@@ -205,26 +120,66 @@ const HomeScreen = ({ navigation }) => {
             </View>
           </View>
         </LinearGradient>
-        {/* <ListCategories /> */}
         <Text style={styles.sectionTittle}>Nổi bật </Text>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          data={hotelHighlights}
-          contentContainerStyle={{ paddingLeft: 20, paddingBottom: 20 }}
-          snapToInterval={width - 20}
-          keyExtractor={() => Math.random().toString(36).substr(2, 9)}
-          renderItem={({ item }) => <RecommendedCard hotel={item} />}
-        />
-        <Text style={styles.sectionTittle}>Khách sạn</Text>
+        {hotelHighlights && hotelHighlights.length && (
+          <View>
+            <FlatList
+              ref={ref}
+              contentContainerStyle={{ paddingLeft: 20 }}
+              showsHorizontalScrollIndicator={false}
+              horizontal
+              pagingEnabled
+              scrollEnabled
+              style={{ flexGrow: 0 }}
+              snapToAlignment="center"
+              scrollEventThrottle={16}
+              decelerationRate={"fast"}
+              data={hotelHighlights}
+              keyExtractor={() => Math.random().toString(36).substr(2, 9)}
+              renderItem={({ item }) => (
+                <RecommendCard hotel={item} navigation={navigation} />
+              )}
+              onScroll={Animated.event(
+                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                { useNativeDriver: false }
+              )}
+            />
+            <View style={styles.wrapDot}>
+              {hotelHighlights.map((_, i) => {
+                let opacity = position.interpolate({
+                  inputRange: [i - 1, i, i + 1],
+                  outputRange: [0.3, 1, 0.3],
+                  extrapolate: "clamp",
+                });
+                return (
+                  <Animated.View
+                    key={i}
+                    style={{
+                      opacity,
+                      height: 3,
+                      width: 15,
+                      backgroundColor: COLORS.white,
+                      margin: 8,
+                      borderRadius: 0,
+                    }}
+                  />
+                );
+              })}
+            </View>
+          </View>
+        )}
+        <Text style={styles.sectionTittle}>Đề xuất</Text>
         <View>
           <FlatList
             contentContainerStyle={{ paddingLeft: 20 }}
             showsHorizontalScrollIndicator={false}
+            maxToRenderPerBatch={3}
             horizontal
             data={dataHotel}
             keyExtractor={() => Math.random().toString(36).substr(2, 9)}
-            renderItem={({ item }) => <Card hotel={item} />}
+            renderItem={({ item }) => (
+              <Card hotel={item} navigation={navigation} />
+            )}
           />
         </View>
       </ScrollView>
@@ -239,7 +194,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     flexDirection: "row",
     justifyContent: "space-between",
-    // backgroundColor: COLORS.sanMarino,
   },
   backgroundColor: {
     width: "100%",
@@ -252,6 +206,22 @@ const styles = StyleSheet.create({
     fontSize: 21,
     fontWeight: "bold",
     color: COLORS.whiteT,
+  },
+  wrapDot: {
+    position: "absolute",
+    bottom: 0,
+    flexDirection: "row",
+    alignSelf: "center",
+  },
+  dotActive: {
+    margin: 3,
+    fontSize: 18,
+    color: COLORS.gray,
+  },
+  dot: {
+    margin: 3,
+    fontSize: 18,
+    color: COLORS.white,
   },
   overlay: {
     flex: 1,
@@ -307,20 +277,6 @@ const styles = StyleSheet.create({
     marginRight: 20,
     overflow: "hidden",
     borderRadius: 10,
-  },
-  imageOverlay: {
-    flex: 1,
-    padding: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(0, 0, 0, .1)",
-  },
-  rmCardImage: {
-    width: width - 40,
-    height: 200,
-    marginRight: 20,
-    borderRadius: 10,
-    overflow: "hidden",
   },
 });
 

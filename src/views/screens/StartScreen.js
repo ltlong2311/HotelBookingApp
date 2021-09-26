@@ -14,7 +14,7 @@ import DrawerNavigator from "../../navigation/DrawerNavigator";
 const StartScreen = ({ navigation }) => {
   return (
     <>
-      <StatusBar style="auto" />
+      <StatusBar style="light" translucent backgroundColor="transparent"/>
       <View style={{ flex: 1 }}>
         <ImageBackground
           style={{ flex: 1 }}

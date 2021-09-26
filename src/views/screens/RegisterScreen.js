@@ -44,7 +44,7 @@ const RegisterScreen = ({ navigation }) => {
             // height: Dimensions.get("window").height / 2,
             marginBottom: -30,
           }}
-          source={require("../../assets/hotel20.jpg")}
+          source={require("../../assets/bg4.jpg")}
         >
           <View style={styles.headerIcon}>
             <MaterialIcons
