@@ -6,6 +6,7 @@ import {
   View,
   Text,
   ScrollView,
+  TouchableOpacity,
   Image,
   FlatList,
   Animated,
@@ -19,8 +20,10 @@ import config from "../../../config";
 const { width, height } = Dimensions.get("screen");
 
 const toText = (html) => {
-  return html.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '').replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
-}
+  return html
+    .replace(/<script[^>]*>([\S\s]*?)<\/script>/gim, "")
+    .replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gim, "");
+};
 
 const DetailsScreen = ({ navigation, route }) => {
   const hotel = route.params;
@@ -110,7 +113,12 @@ const DetailsScreen = ({ navigation, route }) => {
                 color={COLORS.white}
                 onPress={navigation.goBack}
               />
-              <MaterialIcons name="all-out" size={28} color={COLORS.white} />
+              <TouchableOpacity
+                onPress={() => navigation.navigate("ImageHotelScreen", hotel)}
+                activeOpacity={0.8}
+              >
+                <MaterialIcons name="all-out" size={28} color={COLORS.white} />
+              </TouchableOpacity>
             </View>
           </View>
           <View style={styles.imageDetails}>
@@ -208,9 +216,14 @@ const DetailsScreen = ({ navigation, route }) => {
       <View style={styles.buy}>
         <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
           <Text
-            style={{ fontSize: 17, fontWeight: "bold", color: COLORS.whiteT, marginRight: 3 }}
+            style={{
+              fontSize: 17,
+              fontWeight: "bold",
+              color: COLORS.whiteT,
+              marginRight: 3,
+            }}
           >
-            Giá đề xuất: 
+            Giá đề xuất:
           </Text>
           <Text
             style={{ fontSize: 17, fontWeight: "bold", color: COLORS.orange }}
@@ -222,7 +235,7 @@ const DetailsScreen = ({ navigation, route }) => {
               fontSize: 17,
               fontWeight: "bold",
               color: COLORS.white,
-              marginLeft: 2,
+             
             }}
           >
             /ngày

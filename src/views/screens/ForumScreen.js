@@ -5,6 +5,7 @@ import {
   View,
   Text,
   FlatList,
+  ActivityIndicator,
   Dimensions,
   ImageBackground,
   TouchableOpacity,
@@ -16,7 +17,8 @@ import posts from "../../consts/post";
 import PostCard from "../../components/Post/PostCard";
 import { DrawerActions } from "@react-navigation/native";
 
-const ForumScreen = ({navigation}) => {
+const ForumScreen = ({ navigation }) => {
+  const [isLoading, setIsLoading] = React.useState(false);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <LinearGradient
@@ -40,17 +42,24 @@ const ForumScreen = ({navigation}) => {
           color={COLORS.white}
         ></MaterialCommunityIcons>
       </LinearGradient>
-      <View>
-        <FlatList
-          showsHorizontalScrollIndicator={false}
-          maxToRenderPerBatch={2}
-          data={posts}
-          keyExtractor={() => Math.random().toString(36).substr(2, 9)}
-          renderItem={({ item }) => (
-            <PostCard post={item} navigation={navigation} />
-          )}
-        />
-      </View>
+
+      {isLoading ? (
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <ActivityIndicator size={25} color={COLORS.blueLight} />
+        </View>
+      ) : (
+        <View>
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            maxToRenderPerBatch={2}
+            data={posts}
+            keyExtractor={() => Math.random().toString(36).substr(2, 9)}
+            renderItem={({ item }) => (
+              <PostCard post={item} navigation={navigation} />
+            )}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 };

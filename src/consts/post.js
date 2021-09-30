@@ -39,7 +39,7 @@ const posts = [
         content: "Lorem ipsum dolor, sit amet consectetur adipisicing elit",
         createDate: "2021-09-20 22:03:24",
       },
-         {
+      {
         id: 5,
         user: "nhathongthai",
         imgUser: "https://i.imgur.com/6quHTz8.png",
@@ -59,7 +59,15 @@ const posts = [
     createDate: "2021-09-18 22:03:24",
     favorite: 32,
     comment: 9,
-    comments: [],
+    comments: [
+      {
+        id: 1,
+        user: "nguoihaylo",
+        imgUser: "https://i.imgur.com/bBtalxD.jpg",
+        content: "Comment",
+        createDate: "2021-09-20 22:03:24",
+      },
+    ],
   },
   {
     id: "3",
@@ -98,7 +106,22 @@ const posts = [
     createDate: "2021-09-17 20:08:24",
     favorite: 18,
     comment: 2,
-    comments: [],
+    comments: [
+      {
+        id: 1,
+        user: "nguoihaylo",
+        imgUser: "https://i.imgur.com/bBtalxD.jpg",
+        content: "Comment",
+        createDate: "2021-09-20 22:03:24",
+      },
+      {
+        id: 2,
+        user: "nguoihaylo",
+        imgUser: "https://i.imgur.com/bBtalxD.jpg",
+        content: "Comment",
+        createDate: "2021-09-20 22:03:24",
+      },
+    ],
   },
 ];
 

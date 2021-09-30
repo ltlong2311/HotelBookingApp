@@ -46,11 +46,9 @@ const PostDetails = ({ route, navigation }) => {
       //   changeStatusInput={() => changeStatusInput()}
       //   changeStatusFavorite={() => changeStatusFavorite()}
       // />
-      <View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 20 }}>
+      <View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 10 }}>
         <View style={styles.postBlock}>
-          <Text
-            style={{ color: "#2c3e50", fontSize: 20, fontWeight: "bold" }}
-          >
+          <Text style={{ color: "#2c3e50", fontSize: 20, fontWeight: "bold" }}>
             {post.name}
           </Text>
           <View
@@ -80,7 +78,7 @@ const PostDetails = ({ route, navigation }) => {
                 {post.favorite}
               </Text>
               <MaterialCommunityIcons
-                style={{ color: COLORS.darkSub }}
+                style={{ color: COLORS.redTorn }}
                 name="heart"
               />
             </View>
@@ -91,9 +89,11 @@ const PostDetails = ({ route, navigation }) => {
                 paddingHorizontal: 5,
               }}
             >
-              <Text style={{ color: COLORS.darkSub }}>{post.comments.length}</Text>
+              <Text style={{ color: COLORS.darkSub }}>
+                {post.comments.length}
+              </Text>
               <MaterialCommunityIcons
-                style={{ color: COLORS.darkSub }}
+                style={{ color: COLORS.blueChambray }}
                 name="reply"
                 size={18}
               />
@@ -147,7 +147,8 @@ const PostDetails = ({ route, navigation }) => {
             <TouchableOpacity actionOpacity={0.8} onPress={changeStatusInput}>
               {showInputComment ? (
                 <MaterialCommunityIcons
-                  style={{ color: COLORS.darkSub, paddingLeft: 12 }}
+                  style={{ color: COLORS.blueChambray, paddingLeft: 12 }}
+
                   name="reply"
                   size={25}
                 />
@@ -225,7 +226,7 @@ const PostDetails = ({ route, navigation }) => {
           />
           <MaterialCommunityIcons
             name="send"
-            style={{ color: COLORS.darkSub }}
+            style={{ color: COLORS.blueChambray }}
             size={20}
           />
         </View>
@@ -274,11 +275,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     height: 50,
-    paddingHorizontal: 20,
+    paddingRight: 20,
     borderTopWidth: 1,
     borderTopColor: "#efeff4",
     backgroundColor: COLORS.white,
-    borderRadius: 10,
   },
   btnComment: {
     height: 40,
@@ -298,8 +298,11 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
-    paddingLeft: 5,
+    padding: 5,
+    marginHorizontal: 10,
     color: "#05375a",
     fontSize: 15,
+    // backgroundColor: "#f2f3f4",
+    // borderRadius: 15,
   },
 });

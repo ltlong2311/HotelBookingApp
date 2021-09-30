@@ -44,18 +44,19 @@ const RegisterScreen = ({ navigation }) => {
             // height: Dimensions.get("window").height / 2,
             marginBottom: -30,
           }}
-          source={require("../../assets/bg4.jpg")}
+          source={require("../../assets/hotel15.jpg")}
         >
-          <View style={styles.headerIcon}>
-            <MaterialIcons
-              name="arrow-back-ios"
-              size={28}
-              color={COLORS.white}
-              onPress={navigation.goBack}
-            />
+          <View style={styles.overlay}>
+            <View style={styles.headerIcon}>
+              <MaterialIcons
+                name="arrow-back-ios"
+                size={28}
+                color={COLORS.white}
+                onPress={navigation.goBack}
+              />
+            </View>
+            <Text style={styles.textHeader}>Đăng ký</Text>
           </View>
-          <Text style={styles.textHeader}>Đăng ký</Text>
-          <View style={styles.overlay}></View>
         </ImageBackground>
         <View style={styles.footer}>
           <View style={styles.action}>
@@ -88,16 +89,16 @@ const RegisterScreen = ({ navigation }) => {
               autoCapitalize="none"
             />
           </View>
-         
+
           <TouchableOpacity
             actionOpacity={0.8}
             onPress={() => navigation.navigate("Login")}
           >
             <View style={styles.button}>
               <LinearGradient
-                colors={[ "#2F8CCA", "#3BA5F1"]}
+                colors={["#2F8CCA", "#3BA5F1"]}
                 start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }} 
+                end={{ x: 1, y: 0 }}
                 style={styles.signUp}
               >
                 <Text style={styles.textSign}>Đăng ký</Text>
@@ -144,9 +145,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(0, 0, 0, .0)",
+    backgroundColor: "rgba(0, 0, 0, .08)",
   },
   textFooter: {
     color: "#05375a",

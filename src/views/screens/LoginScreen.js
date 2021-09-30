@@ -4,38 +4,68 @@ import {
   StyleSheet,
   View,
   Text,
-  Dimensions,
   ImageBackground,
   TextInput,
   TouchableOpacity,
-  TouchableHighlight,
 } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import {
-  Feather,
   FontAwesome,
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-// import LinearGradient from "react-native-linear-gradient";
 import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../../consts/colors";
+import * as SecureStore from "expo-secure-store";
+import userAPI from "../../API/userAPI";
 
 const LoginScreen = ({ navigation }) => {
   const [data, setData] = React.useState({
     username: "",
     password: "",
-    check_textInputChange: false,
-    secureTextEntry: true,
   });
+  const [secureTextEntry, setSecureTextEntry] = React.useState(true);
 
   const updateSecureTextEntry = () => {
-    setData({
-      ...data,
-      secureTextEntry: !data.secureTextEntry,
-    });
+    setSecureTextEntry(!secureTextEntry);
   };
+
+  async function save(key, value) {
+    await SecureStore.setItemAsync(key, value);
+  }
+
+  async function getValueFor(key) {
+    let result = await SecureStore.getItemAsync(key);
+    if (result) {
+      console.log("🔐 Here's your value 🔐 \n" + result);
+    } else {
+      console.log("No values stored under that key.");
+    }
+  }
+
+  const login = async () => {
+    var formData = new FormData();
+    formData.append("username", data.username);
+    formData.append("password", data.password);
+    try {
+      if (data.username != "" && data.password != "") {
+        // const res = await userAPI.login(JSON.stringify(data));
+        const res = await userAPI.login(formData);
+        console.log(res);
+        if (res.status === "success") {
+          navigation.navigate("Home");
+          save("userToken", res.data.token);
+          getValueFor("userToken");
+        }
+      }
+    } catch (error) {
+      console.log([Error, error]);
+    }
+  };
+
   return (
     <>
+      <StatusBar style="light" />
       <SafeAreaView style={styles.container}>
         <ImageBackground
           style={{
@@ -43,23 +73,25 @@ const LoginScreen = ({ navigation }) => {
             // height: Dimensions.get("window").height / 1.9,
             marginBottom: -30,
           }}
-          source={require("../../assets/bg3.jpg")}
+          source={require("../../assets/hotel33.jpg")}
         >
-          <View style={styles.headerIcon}>
-            <MaterialIcons
-              name="arrow-back-ios"
-              size={28}
-              color={COLORS.white}
-              onPress={navigation.goBack}
-            />
+          <View style={styles.overlay}>
+            <View style={styles.headerIcon}>
+              <MaterialIcons
+                name="arrow-back-ios"
+                size={28}
+                color={COLORS.white}
+                onPress={navigation.goBack}
+              />
+            </View>
+            <Text style={styles.textHeader}>Đăng nhập</Text>
           </View>
-          <Text style={styles.textHeader}>Đăng nhập</Text>
-          <View style={styles.overlay}></View>
         </ImageBackground>
         <View style={styles.footer}>
           <View style={styles.action}>
             <FontAwesome name="user" color={COLORS.primary} size={20} />
             <TextInput
+              onChangeText={(text) => setData({ ...data, username: text })}
               placeholder="Tài khoản"
               style={styles.textInput}
               autoCapitalize="none"
@@ -68,13 +100,14 @@ const LoginScreen = ({ navigation }) => {
           <View style={styles.action}>
             <FontAwesome name="lock" color={COLORS.primary} size={20} />
             <TextInput
+              onChangeText={(text) => setData({ ...data, password: text })}
               placeholder="Mật khẩu"
-              secureTextEntry={data.secureTextEntry ? true : false}
-              style={styles.textInput}  
+              secureTextEntry={secureTextEntry ? true : false}
+              style={styles.textInput}
               autoCapitalize="none"
             />
             <TouchableOpacity onPress={updateSecureTextEntry}>
-              {data.secureTextEntry ? (
+              {secureTextEntry ? (
                 <MaterialCommunityIcons name="eye-off" color="grey" size={20} />
               ) : (
                 <MaterialCommunityIcons name="eye" color="grey" size={20} />
@@ -86,10 +119,7 @@ const LoginScreen = ({ navigation }) => {
               Quên mật khẩu?
             </Text>
           </View>
-          <TouchableOpacity
-            actionOpacity={0.8}
-            onPress={() => navigation.navigate("Home")}
-          >
+          <TouchableOpacity actionOpacity={0.8} onPress={login}>
             <View style={styles.button}>
               <LinearGradient
                 colors={["#08c4ed", "#41BEDA"]}
@@ -155,9 +185,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(0, 0, 0, .0)",
+    backgroundColor: "rgba(0, 0, 0, .1)",
   },
   textFooter: {
     color: "#05375a",

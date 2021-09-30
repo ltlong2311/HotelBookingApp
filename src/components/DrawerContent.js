@@ -13,14 +13,23 @@ import {
 } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import * as SecureStore from 'expo-secure-store';
+
+async function deleteToken(key) {
+  await SecureStore.deleteItemAsync(key);
+}
 
 export const DrawerContent = (props) => {
   const [isDarkTheme, setIsDarkTheme] = React.useState(false);
 
   const toggleTheme = () => {
     setIsDarkTheme(!isDarkTheme);
-    // console.log(isDarkTheme);
   };
+
+  const logOut = () => {
+    deleteToken("userToken");
+    props.navigation.navigate("Login");
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -156,7 +165,7 @@ export const DrawerContent = (props) => {
             />
           )}
           label="Thoát"
-          onPress={() => {props.navigation.navigate("StartScreen")}}
+          onPress={logOut}
         />
       </Drawer.Section>
       <StatusBar style="auto"/>

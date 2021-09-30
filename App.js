@@ -16,6 +16,7 @@ import DetailsScreen from "./src/views/screens/DetailsScreen";
 import LoginScreen from "./src/views/screens/LoginScreen";
 import RegisterScreen from "./src/views/screens/RegisterScreen";
 import PostDetails from "./src/views/screens/PostDetails";
+import ImageHotelScreen from "./src/views/screens/ImageHotelScreen";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -28,6 +29,7 @@ export default function App() {
         <Stack.Screen name="StartScreen" component={StartScreen} />
         <Stack.Screen name="Home" component={DrawerNavigator} />
         <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
+        <Stack.Screen name="ImageHotelScreen" component={ImageHotelScreen} />
         <Stack.Screen name="PostDetails" component={PostDetails} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />

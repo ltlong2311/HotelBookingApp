@@ -1,11 +1,16 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-
-import { ForumStackNavigator, HomeStackNavigator, LocationStackNavigator, MainStackNavigator } from "./StackNavigator";
+import {
+  ForumStackNavigator,
+  HomeStackNavigator,
+  LocationStackNavigator,
+  MainStackNavigator,
+} from "./StackNavigator";
 import { StatusBar } from "expo-status-bar";
 import LoginScreen from "../views/screens/LoginScreen";
 import ActiveScreen from "../views/screens/ActiveScreen";
+import HomeScreen from "../views/screens/HomeScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -37,14 +42,13 @@ const BottomTabNavigator = () => {
           headerShown: false,
           tabBarActiveTintColor: "#42628F",
           tabBarInactiveTintColor: "gray",
-          tabBarStyle : [
+          tabBarStyle: [
             {
-              "display": "flex"
+              display: "flex",
             },
-            null
-          ]
+            null,
+          ],
         })}
-
       >
         <Tab.Screen name="Home" component={HomeStackNavigator} />
         <Tab.Screen name="Location" component={LocationStackNavigator} />
@@ -52,7 +56,6 @@ const BottomTabNavigator = () => {
         <Tab.Screen name="Active" component={ActiveScreen} />
         <Tab.Screen name="User" component={LoginScreen} />
       </Tab.Navigator>
-      <StatusBar style="light" />
     </>
   );
 };

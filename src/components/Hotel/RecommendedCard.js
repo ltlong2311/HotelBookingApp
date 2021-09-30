@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   rmCardImage: {
     width: width - 40,
     height: 200,
-    marginRight: 20,
+    marginHorizontal: 20,
     borderRadius: 10,
     overflow: "hidden",
   },

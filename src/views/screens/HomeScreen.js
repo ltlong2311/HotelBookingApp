@@ -4,7 +4,6 @@ import {
   View,
   SafeAreaView,
   ScrollView,
-  // StatusBar,
   StyleSheet,
   Text,
   TextInput,
@@ -13,7 +12,6 @@ import {
   Dimensions,
   Animated,
   TouchableOpacity,
-  ImageStore,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import COLORS from "../../consts/colors";
@@ -29,8 +27,9 @@ const { width } = Dimensions.get("screen");
 const HomeScreen = ({ navigation }) => {
   const [dataHotel, setDataHotel] = useState([]);
   const [dataList, setDataList] = useState(hotelHighlights);
+  const [colorContentStatusBar, setColorContentStatusBar] = useState("light");
   const scrollX = new Animated.Value(0);
-  let position = Animated.divide(scrollX, width - 40);
+  let position = Animated.divide(scrollX, width);
   const ref = useRef(null);
 
   useEffect(() => {
@@ -54,7 +53,7 @@ const HomeScreen = ({ navigation }) => {
 
     setInterval(() => {
       scrolled++;
-      if (scrolled < numberOfData) scrollValue = scrollValue + width - 20;
+      if (scrolled < numberOfData) scrollValue = scrollValue + width;
       else {
         scrollValue = 0;
         scrolled = 0;
@@ -70,7 +69,7 @@ const HomeScreen = ({ navigation }) => {
         backgroundColor: COLORS.white,
       }}
     >
-      <StatusBar style="light" />
+      <StatusBar style={colorContentStatusBar} />
       <LinearGradient
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
@@ -125,7 +124,7 @@ const HomeScreen = ({ navigation }) => {
           <View>
             <FlatList
               ref={ref}
-              contentContainerStyle={{ paddingLeft: 20 }}
+              contentContainerStyle={{}}
               showsHorizontalScrollIndicator={false}
               horizontal
               pagingEnabled
@@ -147,6 +146,7 @@ const HomeScreen = ({ navigation }) => {
             <View style={styles.wrapDot}>
               {hotelHighlights.map((_, i) => {
                 let opacity = position.interpolate({
+                  // thay doi do mo khi position thay doi
                   inputRange: [i - 1, i, i + 1],
                   outputRange: [0.3, 1, 0.3],
                   extrapolate: "clamp",
@@ -155,7 +155,7 @@ const HomeScreen = ({ navigation }) => {
                   <Animated.View
                     key={i}
                     style={{
-                      opacity,
+                      opacity, //
                       height: 3,
                       width: 15,
                       backgroundColor: COLORS.white,

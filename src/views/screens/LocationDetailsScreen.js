@@ -5,6 +5,7 @@ import {
   StyleSheet,
   View,
   Text,
+  Animated,
   FlatList,
   ScrollView,
 } from "react-native";
@@ -16,7 +17,18 @@ import HotelByLocationCard from "../../components/Hotel/HotelByLocationCard";
 
 const LocationDetailsScreen = ({ navigation, route }) => {
   const location = route.params;
+  const [colorStatusBar, setColorStatusBar] = React.useState("transparent");
 
+  const isChangeColorStatusBar = (e) => {
+    const contentOffsetY = e.nativeEvent.contentOffset.y;
+    console.log(contentOffsetY);
+    if (contentOffsetY > 55) {
+      setColorStatusBar(COLORS.blueChambray);
+    } else {
+      setColorStatusBar("transparent");
+    }
+  };
+  
   const getHeader = () => {
     return (
       <>
@@ -67,20 +79,25 @@ const LocationDetailsScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
-      <StatusBar style="light" />
-          <View style={styles.locationList}>
-            <FlatList
-              contentContainerStyle={{}}
-              showsVerticalScrollIndicator={false}
-              ListHeaderComponent={getHeader}
-              maxToRenderPerBatch={2}
-              data={hotelsByLocation}
-              keyExtractor={() => Math.random().toString(36).substr(2, 9)}
-              renderItem={({ item }) => (
-                <HotelByLocationCard hotel={item} navigation={navigation} />
-              )}
-            />
-          </View>
+      <StatusBar
+        style="light"
+        backgroundColor={colorStatusBar}
+        animated={true}
+      />
+      <View style={styles.locationList}>
+        <FlatList
+          contentContainerStyle={{}}
+          showsVerticalScrollIndicator={false}
+          ListHeaderComponent={getHeader}
+          maxToRenderPerBatch={2}
+          data={hotelsByLocation}
+          keyExtractor={() => Math.random().toString(36).substr(2, 9)}
+          onScroll={isChangeColorStatusBar}
+          renderItem={({ item }) => (
+            <HotelByLocationCard hotel={item} navigation={navigation} />
+          )}
+        />
+      </View>
     </SafeAreaView>
   );
 };
